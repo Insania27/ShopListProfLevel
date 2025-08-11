@@ -1,9 +1,9 @@
 package com.example.shoplistproflevel.domain
 
-class EditShopListItemUseCase {
+class EditShopListItemUseCase(private val shopListRepository: ShopListRepository) {
 
     fun editShopListItem(shopListItem: ShopListItem) {
-        TODO()
+        shopListRepository.editShopListItem(shopListItem)
     }
 
 }
