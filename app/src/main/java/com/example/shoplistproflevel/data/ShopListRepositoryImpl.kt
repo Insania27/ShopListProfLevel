@@ -7,7 +7,7 @@ import com.example.shoplistproflevel.domain.ShopListRepository
 
 object ShopListRepositoryImpl: ShopListRepository {
 
-    private val shopList = mutableListOf<ShopListItem>()
+    private val shopList = sortedSetOf<ShopListItem>({o1, o2 -> o1.id.compareTo(o2.id)})
 
     private val shopListLD = MutableLiveData<List<ShopListItem>>()
 
@@ -32,7 +32,7 @@ object ShopListRepositoryImpl: ShopListRepository {
     override fun editShopListItem(shopListItem: ShopListItem) {
         val oldItem = getShopListItemById(shopListItem.id)
         shopList.remove(oldItem)
-        shopList.add(shopListItem)
+        addShopListItem(shopListItem)
     }
 
     override fun deleteShopListItem(shopListItem: ShopListItem) {
@@ -42,7 +42,7 @@ object ShopListRepositoryImpl: ShopListRepository {
 
     override fun addShopListItem(shopListItem: ShopListItem) {
         if (shopListItem.id == ShopListItem.UNDEFINED_ID){
-            shopListItem.id == autoincrementId++
+            shopListItem.id = autoincrementId++
         }
         shopList.add(shopListItem)
         updateList()
