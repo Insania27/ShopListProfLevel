@@ -1,5 +1,6 @@
 package com.example.shoplistproflevel.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.shoplistproflevel.domain.ShopListItem
 
 class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
+    var count = 0
     var shopList = listOf<ShopListItem>()
         set(value) {
             field = value
@@ -18,28 +20,26 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_shop_disabled, parent, false)
+        Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
+        val layout = when (viewType){
+            VIEW_TYPE_DISABLED -> R.layout.item_shop_disabled
+            VIEW_TYPE_ENABLED -> R.layout.item_shop_enabled
+            else -> throw RuntimeException("Unknown view type: $viewType")
+        }
+        val view = LayoutInflater.from(parent.context).inflate(
+            layout,
+            parent,
+            false
+        )
         return ShopItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         val shopListItem = shopList[position]
-        val status = if (shopListItem.enabled) {
-            "Active"
-        } else {
-            "Not active"
-        }
         holder.tvName.text = shopListItem.name
         holder.tvCount.text = shopListItem.count.toString()
         holder.itemView.setOnLongClickListener{
             true
-        }
-        if (shopListItem.enabled){
-            holder.tvName.text = "${shopListItem.name} $status"
-            holder.tvCount.text = shopListItem.count.toString()
-            holder.tvName.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_light))
         }
     }
 
@@ -47,16 +47,32 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         super.onViewRecycled(viewHolder)
         viewHolder.tvName.text = ""
         viewHolder.tvCount.text = ""
-        viewHolder.tvName.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, android.R.color.white))
+        viewHolder.tvName.setTextColor(ContextCompat.getColor(
+            viewHolder.itemView.context,
+            android.R.color.white
+        ))
     }
 
     override fun getItemCount(): Int {
         return shopList.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        val item = shopList[position]
+        return if (item.enabled) VIEW_TYPE_ENABLED
+        else VIEW_TYPE_DISABLED
+    }
+
     class ShopItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val tvName = view.findViewById<TextView>(R.id.tv_name)
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
+    }
+
+    companion object{
+        const val VIEW_TYPE_DISABLED = 1
+        const val VIEW_TYPE_ENABLED = 2
+
+        const val MAX_POOL_SIZE = 30
     }
 
 }

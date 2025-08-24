@@ -1,18 +1,11 @@
 package com.example.shoplistproflevel.presentation
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplistproflevel.R
-import com.example.shoplistproflevel.domain.ShopListItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,5 +28,13 @@ class MainActivity : AppCompatActivity() {
         val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         adapter = ShopListAdapter()
         rvShopList.adapter = adapter
+        rvShopList.recycledViewPool.setMaxRecycledViews(
+            ShopListAdapter.VIEW_TYPE_DISABLED,
+            ShopListAdapter.MAX_POOL_SIZE
+        )
+        rvShopList.recycledViewPool.setMaxRecycledViews(
+            ShopListAdapter.VIEW_TYPE_ENABLED,
+            ShopListAdapter.MAX_POOL_SIZE
+        )
     }
 }
