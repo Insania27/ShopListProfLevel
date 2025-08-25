@@ -19,6 +19,10 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
             notifyDataSetChanged()
         }
 
+    var onShopItemLongClickListener: ((ShopListItem) -> Unit)? = null
+
+    var onShopItemClickListener: ((ShopListItem) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
         val layout = when (viewType){
@@ -39,10 +43,15 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         holder.tvName.text = shopListItem.name
         holder.tvCount.text = shopListItem.count.toString()
         holder.itemView.setOnLongClickListener{
+            onShopItemLongClickListener?.invoke(shopListItem) // invoke нужен, тк может быть null
             true
+        }
+        holder.itemView.setOnClickListener {
+            onShopItemClickListener?.invoke(shopListItem)
         }
     }
 
+    // метод вызывается для view, которые исчезают с экрана
     override fun onViewRecycled(viewHolder: ShopItemViewHolder) {
         super.onViewRecycled(viewHolder)
         viewHolder.tvName.text = ""
@@ -57,11 +66,13 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         return shopList.size
     }
 
+    // метод для определения типа view
     override fun getItemViewType(position: Int): Int {
         val item = shopList[position]
         return if (item.enabled) VIEW_TYPE_ENABLED
         else VIEW_TYPE_DISABLED
     }
+
 
     class ShopItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val tvName = view.findViewById<TextView>(R.id.tv_name)
