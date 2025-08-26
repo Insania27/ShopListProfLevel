@@ -24,7 +24,6 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
     var onShopItemClickListener: ((ShopListItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
         val layout = when (viewType){
             VIEW_TYPE_DISABLED -> R.layout.item_shop_disabled
             VIEW_TYPE_ENABLED -> R.layout.item_shop_enabled
@@ -39,6 +38,7 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
         val shopListItem = shopList[position]
         holder.tvName.text = shopListItem.name
         holder.tvCount.text = shopListItem.count.toString()
