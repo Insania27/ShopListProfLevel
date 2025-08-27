@@ -4,7 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.shoplistproflevel.domain.ShopListItem
 
 
-// класс для сравнения старого и нового списков
+// 1 способ для сравнения списков, менее эффективен, тк работает в главном потоке
+
 class ShopListDiffCallback(
     private val oldList: List<ShopListItem>,
     private val newList: List<ShopListItem>
