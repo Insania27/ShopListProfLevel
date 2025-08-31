@@ -5,14 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoplistproflevel.R
 import com.example.shoplistproflevel.domain.ShopListItem
@@ -37,7 +35,12 @@ class ShopItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_shop_item)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
             insets
         }
         parseIntent()
@@ -81,13 +84,16 @@ class ShopItemActivity : AppCompatActivity() {
 
     private fun launchAddMode() {
         buttonSave.setOnClickListener {
-            viewModel.addShopItem(etName.text?.toString(), etCount.text?.toString())
+            viewModel.addShopItem(
+                etName.text?.toString(),
+                etCount.text?.toString()
+            )
         }
     }
 
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
-        viewModel.shopItem.observe(this){
+        viewModel.shopItem.observe(this) {
             etName.setText(it.name)
             etCount.setText(it.count.toString())
         }
@@ -112,7 +118,10 @@ class ShopItemActivity : AppCompatActivity() {
             if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
                 throw RuntimeException("Param shop item id is absent")
             }
-            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopListItem.UNDEFINED_ID)
+            shopItemId = intent.getIntExtra(
+                EXTRA_SHOP_ITEM_ID,
+                ShopListItem.UNDEFINED_ID
+            )
         }
     }
 
