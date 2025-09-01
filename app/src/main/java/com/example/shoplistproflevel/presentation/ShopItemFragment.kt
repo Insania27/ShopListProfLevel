@@ -31,7 +31,7 @@ class ShopItemFragment(
     private lateinit var buttonSave: Button
 
 
-
+    // создает view
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +40,7 @@ class ShopItemFragment(
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
+    // вызывается, когда view уже создана
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         parseParams()
@@ -50,7 +51,8 @@ class ShopItemFragment(
         observeViewModel()
     }
 
-
+    // вместо this передаем viewLifecycleOwner (это жц view из onCreateView),
+    // тк жц фрагмента может быть дольше, чем жц view
     private fun observeViewModel() {
         viewModel.errorInputCount.observe(viewLifecycleOwner) {
             val message = if (it) {
@@ -70,7 +72,7 @@ class ShopItemFragment(
             tilName.error = message
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            finish()
+            activity?.onBackPressed()
         }
     }
 
@@ -175,6 +177,14 @@ class ShopItemFragment(
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
+
+        fun newInstanceAddItem(): Fragment{
+            return ShopItemFragment(MODE_ADD)
+        }
+
+        fun newInstanceEditItem(shopItemId: Int): Fragment{
+            return ShopItemFragment(MODE_EDIT, shopItemId)
+        }
 
         fun newIntentAddItem(context: Context): Intent {
             val intent = Intent(context, ShopItemActivity::class.java)
