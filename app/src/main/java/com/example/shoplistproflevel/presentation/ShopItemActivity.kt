@@ -16,7 +16,7 @@ import com.example.shoplistproflevel.R
 import com.example.shoplistproflevel.domain.ShopListItem
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopListItem.UNDEFINED_ID
@@ -33,6 +33,9 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
+    override fun onEditingFinishedListener() {
+        finish()
+    }
 
     private fun launchRightMode() {
         val fragment = when (screenMode) {

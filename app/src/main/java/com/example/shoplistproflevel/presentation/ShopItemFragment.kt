@@ -1,5 +1,6 @@
 package com.example.shoplistproflevel.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,8 +26,19 @@ class ShopItemFragment : Fragment() {
     private lateinit var etCount: EditText
     private lateinit var buttonSave: Button
 
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopListItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +85,7 @@ class ShopItemFragment : Fragment() {
             tilName.error = message
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener.onEditingFinishedListener()
         }
     }
 
@@ -181,6 +193,10 @@ class ShopItemFragment : Fragment() {
             }
 
         })
+    }
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinishedListener()
     }
 
     companion object {
