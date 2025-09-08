@@ -26,7 +26,11 @@ class ShopItemActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        launchRightMode()
+        // вызываем метод только если активити не поворачивалась,
+        // чтобы onCreate не вызывался несколько раз
+        if (savedInstanceState == null) {
+            launchRightMode()
+        }
     }
 
 
@@ -37,7 +41,7 @@ class ShopItemActivity : AppCompatActivity() {
             else -> throw RuntimeException("Unknown screen mode: $screenMode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
 
